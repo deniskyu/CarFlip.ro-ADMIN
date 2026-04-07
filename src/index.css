@@ -1,0 +1,487 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ========== LOGIN ========== */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-form h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.login-form input {
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+}
+
+.login-form input:focus {
+    border-color: #555;
+}
+
+.login-form button {
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: #081539;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-form button:disabled {
+    opacity: 0.5;
+}
+
+/* ========== DASHBOARD ========== */
+.dashboard-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 16px;
+    padding-bottom: 40px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.dashboard-header h2 {
+    font-size: 20px;
+}
+
+.logout-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ========== TABS ========== */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    background: #111;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+}
+
+.tab.active {
+    background: #081539;
+    color: #fff;
+    border-color: #081539;
+}
+
+/* ========== COMMON ========== */
+.refresh-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.loading-text, .empty-text {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-size: 14px;
+}
+
+/* ========== SEARCH SECTION ========== */
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-row, .add-section, .add-model-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.search-row input, .add-section input, .add-model-row input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+}
+
+.search-row input:focus, .add-section input:focus, .add-model-row input:focus {
+    border-color: #555;
+}
+
+.search-row button, .add-section button, .add-model-row button {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #081539;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* ========== SEARCHED USER ========== */
+.searched-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #141414;
+    border-radius: 12px;
+    border: 1px solid #222;
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-info p {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+.user-info p:first-child {
+    font-size: 15px;
+    color: #fff;
+}
+
+.status-banned {
+    color: #ff4444 !important;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #44bb44 !important;
+    font-weight: 600;
+}
+
+.ban-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background: #800000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.unban-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background: #2a6e2a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* ========== POPUP ========== */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.popup {
+    background: #1a1a1a;
+    padding: 24px;
+    border-radius: 14px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+}
+
+.popup p {
+    font-size: 15px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.popup-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.confirm-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #800000;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+/* ========== REPORTS ========== */
+.reports-header, .brands-header, .info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.reports-header h3, .brands-header h3, .info-header h3 {
+    font-size: 17px;
+}
+
+.report-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+.report-type {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #1e2a4a;
+    color: #7aa2f7;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.report-reporter {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 12px;
+}
+
+.report-target {
+    padding: 12px;
+    background: #0f0f0f;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.report-target p {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #ccc;
+}
+
+.report-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.report-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin-top: 8px;
+}
+
+.report-deleted {
+    color: #666;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.report-reason {
+    font-size: 14px;
+    color: #e0a0a0;
+    margin-bottom: 14px;
+    padding: 10px;
+    background: #1a1010;
+    border-radius: 8px;
+}
+
+.report-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.resolve-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #2a6e2a;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dismiss-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ========== BRANDS ========== */
+.brand-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+}
+
+.brand-name {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.delete-x {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #ff4444;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.brand-expanded {
+    padding: 0 16px 14px;
+    border-top: 1px solid #222;
+    padding-top: 14px;
+}
+
+.model-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.model-row:last-child {
+    border-bottom: none;
+}
+
+/* ========== INFO ========== */
+.stats-cards {
+    display: flex;
+    gap: 12px;
+}
+
+.stat-card {
+    flex: 1;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 24px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #888;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+}
