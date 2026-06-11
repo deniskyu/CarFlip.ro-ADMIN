@@ -485,3 +485,45 @@ body {
     font-size: 28px;
     font-weight: 700;
 }
+
+
+.report-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Acțiune distructivă: Șterge / Banează */
+.delete-action-btn,
+.ban-action-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #c0392b;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Închide raportul — roșu (brand) */
+.resolve-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #800000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.delete-action-btn:disabled,
+.ban-action-btn:disabled,
+.resolve-btn:disabled,
+.confirm-btn:disabled,
+.cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}

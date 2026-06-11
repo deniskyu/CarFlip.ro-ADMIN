@@ -9,8 +9,13 @@ function ReportsTab() {
     const [searchedUser, setSearchedUser] = useState(null);
     const [searchLoading, setSearchLoading] = useState(false);
     const [confirmBan, setConfirmBan] = useState(false);
-    const [confirmReportId, setConfirmReportId] = useState(null);
-    const [confirmReportStatus, setConfirmReportStatus] = useState(null);
+
+    // Acțiune distructivă pe un raport (Șterge / Banează) -> confirmare
+    // { reportId, kind: 'delete' | 'ban', targetType }
+    const [confirmAction, setConfirmAction] = useState(null);
+
+    // ID-ul raportului în curs de procesare (blochează butoanele lui)
+    const [processingId, setProcessingId] = useState(null);
 
     const fetchReports = async () => {
         setLoadingReports(true);
@@ -61,21 +66,61 @@ function ReportsTab() {
         }
     };
 
-    const handleReportStatus = async () => {
-        if (!confirmReportId || !confirmReportStatus) return;
+    // "Rezolvat" — închide raportul fără să șteargă/baneze. Instant, fără popup.
+    const handleResolve = async (reportId) => {
+        if (processingId) return;
+        setProcessingId(reportId);
         try {
-            const { data } = await api.put(`/api/admin/reports/${confirmReportId}`, { status: confirmReportStatus });
+            const { data } = await api.put(`/api/admin/reports/${reportId}`, { status: 'resolved' });
             if (data.success) {
                 toast.success(data.message);
-                setReports(reports.filter(r => r._id !== confirmReportId));
+                setReports(prev => prev.filter(r => r._id !== reportId));
             } else {
                 toast.error(data.message);
             }
         } catch (err) {
             toast.error('Eroare la actualizare raport.');
         } finally {
-            setConfirmReportId(null);
-            setConfirmReportStatus(null);
+            setProcessingId(null);
+        }
+    };
+
+    // "Șterge" / "Banează" — acțiune distructivă; server-ul face acțiunea + auto-dismiss.
+    const handleConfirmAction = async () => {
+        if (!confirmAction) return;
+        const { reportId } = confirmAction;
+        setProcessingId(reportId);
+        try {
+            const { data } = await api.post(`/api/admin/reports/${reportId}/action`);
+            if (data.success) {
+                toast.success(data.message);
+                setReports(prev => prev.filter(r => r._id !== reportId));
+            } else {
+                toast.error(data.message);
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Eroare la procesarea acțiunii.');
+        } finally {
+            setProcessingId(null);
+            setConfirmAction(null);
+        }
+    };
+
+    // Textul din popup-ul de confirmare pentru acțiunea distructivă
+    const getConfirmActionText = () => {
+        if (!confirmAction) return '';
+        if (confirmAction.kind === 'ban') {
+            return 'Banezi acest utilizator? Toate sesiunile lui vor fi invalidate, iar raportul va fi închis.';
+        }
+        switch (confirmAction.targetType) {
+            case 'post':
+                return 'Ștergi definitiv acest anunț împreună cu toate pozele și videoclipurile lui? Raportul va fi închis.';
+            case 'comment':
+                return 'Ștergi definitiv acest comentariu și toate răspunsurile lui? Raportul va fi închis.';
+            case 'message':
+                return 'Ștergi acest mesaj? Dacă are imagine, va fi eliminată definitiv. Raportul va fi închis.';
+            default:
+                return 'Confirmi această acțiune? Raportul va fi închis.';
         }
     };
 
@@ -168,7 +213,7 @@ function ReportsTab() {
                 )}
             </div>
 
-            {/* BAN CONFIRM POPUP */}
+            {/* BAN CONFIRM POPUP (din search) */}
             {confirmBan && (
                 <div className="popup-overlay" onClick={() => setConfirmBan(false)}>
                     <div className="popup" onClick={(e) => e.stopPropagation()}>
@@ -181,14 +226,26 @@ function ReportsTab() {
                 </div>
             )}
 
-            {/* REPORT STATUS CONFIRM POPUP */}
-            {confirmReportId && (
-                <div className="popup-overlay" onClick={() => { setConfirmReportId(null); setConfirmReportStatus(null); }}>
+            {/* ACȚIUNE RAPORT CONFIRM POPUP (Șterge / Banează) */}
+            {confirmAction && (
+                <div className="popup-overlay" onClick={() => setConfirmAction(null)}>
                     <div className="popup" onClick={(e) => e.stopPropagation()}>
-                        <p>Marchezi raportul ca <strong>{confirmReportStatus}</strong>?</p>
+                        <p>{getConfirmActionText()}</p>
                         <div className="popup-actions">
-                            <button className="confirm-btn" onClick={handleReportStatus}>Da</button>
-                            <button className="cancel-btn" onClick={() => { setConfirmReportId(null); setConfirmReportStatus(null); }}>Nu</button>
+                            <button
+                                className="confirm-btn"
+                                onClick={handleConfirmAction}
+                                disabled={processingId === confirmAction.reportId}
+                            >
+                                {processingId === confirmAction.reportId ? '...' : 'Da'}
+                            </button>
+                            <button
+                                className="cancel-btn"
+                                onClick={() => setConfirmAction(null)}
+                                disabled={processingId === confirmAction.reportId}
+                            >
+                                Nu
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -218,17 +275,31 @@ function ReportsTab() {
                     </div>
 
                     <div className="report-actions">
+                        {report.target && (
+                            report.target_type === 'profile' ? (
+                                <button
+                                    className="ban-action-btn"
+                                    disabled={processingId === report._id}
+                                    onClick={() => setConfirmAction({ reportId: report._id, kind: 'ban', targetType: report.target_type })}
+                                >
+                                    Banează
+                                </button>
+                            ) : (
+                                <button
+                                    className="delete-action-btn"
+                                    disabled={processingId === report._id}
+                                    onClick={() => setConfirmAction({ reportId: report._id, kind: 'delete', targetType: report.target_type })}
+                                >
+                                    Șterge
+                                </button>
+                            )
+                        )}
                         <button
                             className="resolve-btn"
-                            onClick={() => { setConfirmReportId(report._id); setConfirmReportStatus('resolved'); }}
+                            disabled={processingId === report._id}
+                            onClick={() => handleResolve(report._id)}
                         >
-                            Resolved
-                        </button>
-                        <button
-                            className="dismiss-btn"
-                            onClick={() => { setConfirmReportId(report._id); setConfirmReportStatus('dismissed'); }}
-                        >
-                            Dismissed
+                            Rezolvat
                         </button>
                     </div>
                 </div>
