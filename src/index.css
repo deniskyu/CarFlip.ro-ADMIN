@@ -799,3 +799,146 @@ body {
     font-size: 14px; outline: none;
 }
 .popup code { background: #1c1c1c; padding: 2px 6px; border-radius: 4px; color: #7aa2f7; }
+
+/* ==========================================================================
+   INFO TAB — de adăugat la FINALUL fișierului index.css
+   --------------------------------------------------------------------------
+   Extinde stilurile existente (.stat-card, .stat-label, .stat-value), nu le
+   înlocuiește. Aceleași culori ca restul panoului.
+   ========================================================================== */
+
+/* ---------- Cardurile de statistici ---------- */
+
+/* `position: relative` e necesar pentru eticheta de diferență.
+   Restul proprietăților rămân cele definite mai sus în fișier. */
+.stat-card {
+    position: relative;
+    transition: border-color .2s ease, transform .2s ease;
+}
+.stat-card:hover {
+    border-color: #2e2e2e;
+    transform: translateY(-2px);
+}
+
+/* Ancorează cifra mare optic, indiferent dacă are sau nu etichetă dedesubt */
+.stat-value {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+/* ---------- Eticheta de diferență ---------- */
+.stat-delta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    align-self: center;
+    margin-top: 2px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+.stat-delta.up {
+    color: #4ade80;
+    background: #0f2417;
+    border-color: #1b3a26;
+}
+.stat-delta.down {
+    color: #f87171;
+    background: #2a1414;
+    border-color: #3d1f1f;
+}
+.stat-delta.flat {
+    color: #71717a;
+    background: #161616;
+    border-color: #242424;
+    font-weight: 600;
+}
+
+/* ---------- Linia de context ---------- */
+.stats-meta {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 12.5px;
+    color: #6b6b6b;
+    line-height: 1.6;
+}
+.stats-meta strong {
+    color: #999;
+    font-weight: 600;
+}
+/* Data completă e informație de rezervă — pe ecran îngust nu merită spațiul */
+.stats-meta-date {
+    color: #4a4a4a;
+}
+@media (max-width: 420px) {
+    .stats-meta-date { display: none; }
+}
+
+/* ---------- Butonul de reîmprospătare ---------- */
+.refresh-btn.is-loading {
+    animation: spin 800ms linear infinite;
+    opacity: .6;
+    pointer-events: none;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   VARIANTA CU DOUĂ BLOCURI
+   --------------------------------------------------------------------------
+   Doar dacă preferi să păstrezi structura ta inițială, cu setul curent și
+   setul de la ultima verificare afișate separat. Se poate șterge dacă
+   folosești varianta cu diferență.
+   ========================================================================== */
+
+.stats-last-refresh {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #1e1e1e;
+}
+.last-refresh-label {
+    font-size: 12.5px;
+    color: #6b6b6b;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Bulină care marchează vizual că blocul de dedesubt e „istoric" */
+.last-refresh-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3a3a3a;
+    flex-shrink: 0;
+}
+/* Setul vechi trebuie să fie clar secundar față de cel curent */
+.stats-last-refresh .stat-card {
+    background: #101010;
+    border-color: #1c1c1c;
+    padding: 16px 12px;
+}
+.stats-last-refresh .stat-card:hover {
+    transform: none;
+    border-color: #1c1c1c;
+}
+.stats-last-refresh .stat-value {
+    font-size: 20px;
+    color: #8a8a8a;
+}
+.stats-last-refresh .stat-label {
+    font-size: 12px;
+    color: #5c5c5c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stat-card, .refresh-btn.is-loading { transition: none; animation: none; }
+}
