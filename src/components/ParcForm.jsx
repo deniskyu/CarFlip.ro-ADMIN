@@ -114,7 +114,8 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
     const [userQ, setUserQ] = useState('');
     const [userList, setUserList] = useState([]);
     const [selUser, setSelUser] = useState(null);
-    const [newUser, setNewUser] = useState({ username: '', email: '' });
+    const [newUser, setNewUser] = useState({ username: '', email: '', phone: '', password: '' });
+    const [createdPass, setCreatedPass] = useState(null);   // afișată o singură dată
     const [creatingUser, setCreatingUser] = useState(false);
     const userTimer = useRef(null);
 
@@ -174,7 +175,7 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
 
     const handleCreateUser = async () => {
         if (!newUser.username.trim() || !newUser.email.trim()) {
-            return toast.error('Completează username și email.');
+            return toast.error('Completează cel puțin username și email.');
         }
         setCreatingUser(true);
         try {
@@ -182,17 +183,27 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
             if (!data.success) return toast.error(data.message);
             setSelUser(data.user);
             set('user_id', data.user._id);
-            // Parola se afișează O SINGURĂ DATĂ. Nu se poate recupera ulterior.
-            window.prompt(
-                `Cont creat. COPIAZĂ PAROLA ACUM — nu mai poate fi afișată:`,
-                data.password
-            );
+            // Parola se afișează într-un câmp din care poate fi copiată, nu
+            // într-un prompt() — acela se închide din reflex și parola se pierde.
+            setCreatedPass({ password: data.password, generated: data.generated, email: data.user.email });
             toast.success('Cont creat.');
         } catch (err) {
             toast.error(err.response?.data?.message || 'Eroare la crearea contului.');
         } finally {
             setCreatingUser(false);
         }
+    };
+
+    const copyCreds = () => {
+        if (!createdPass) return;
+        const text =
+            `Panou administrare site\n` +
+            `Adresă: https://${f.subdomain || '<subdomeniu>'}.car-flip.com/admin\n` +
+            `Email: ${createdPass.email}\n` +
+            `Parolă: ${createdPass.password}`;
+        navigator.clipboard?.writeText(text)
+            .then(() => toast.success('Datele de acces au fost copiate.'))
+            .catch(() => toast.error('Nu am putut copia. Selectează manual.'));
     };
 
     // ── Imagini ─────────────────────────────────────────────────────────────
@@ -323,16 +334,45 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
                 <div className="user-block">
                     <span className="lbl">Cont dealer</span>
                     {selUser ? (
+                        <>
                         <div className="user-sel">
                             <div>
                                 <strong>{selUser.username}</strong>
                                 <span>{selUser.email}</span>
                             </div>
                             <button type="button" className="ghost-btn"
-                                onClick={() => { setSelUser(null); set('user_id', ''); }}>
+                                onClick={() => { setSelUser(null); set('user_id', ''); setCreatedPass(null); }}>
                                 Schimbă
                             </button>
                         </div>
+
+                        {createdPass && (
+                            <div className="creds-box">
+                                <strong>Datele de acces ale dealerului</strong>
+                                <p className="hint">
+                                    {createdPass.generated
+                                        ? 'Parola generată se afișează O SINGURĂ DATĂ. Copiaz-o acum.'
+                                        : 'Parola aleasă de tine. Notează-o oricum.'}
+                                </p>
+                                <div className="creds-row">
+                                    <span>Adresă</span>
+                                    <code>{f.subdomain || '<subdomeniu>'}.car-flip.com/admin</code>
+                                </div>
+                                <div className="creds-row">
+                                    <span>Email</span>
+                                    <code>{createdPass.email}</code>
+                                </div>
+                                <div className="creds-row">
+                                    <span>Parolă</span>
+                                    <code className="creds-pass">{createdPass.password}</code>
+                                </div>
+                                <button type="button" className="confirm-btn" style={{ width: '100%', marginTop: 10 }}
+                                    onClick={copyCreds}>
+                                    Copiază tot
+                                </button>
+                            </div>
+                        )}
+                        </>
                     ) : (
                         <>
                             <input
@@ -354,16 +394,49 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
                             ))}
 
                             <div className="new-user">
-                                <span className="hint">Sau creează un cont nou, deja verificat:</span>
-                                <div className="row">
-                                    <input placeholder="username" value={newUser.username}
+                                <h4>Dealerul nu are cont încă?</h4>
+                                <span className="hint">
+                                    Creează-l aici. Contul e verificat din start — nu trece prin
+                                    codul pe email, deci poate intra imediat în aplicație și în panou.
+                                </span>
+
+                                <label className="field">
+                                    <span className="lbl">Username</span>
+                                    <input value={newUser.username} placeholder="parcbogdan"
+                                        autoCapitalize="off" autoCorrect="off" spellCheck={false}
                                         onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} />
-                                    <input placeholder="email" value={newUser.email}
+                                    <span className="hint">3-16 caractere, litere, cifre, punct sau underscore.</span>
+                                </label>
+
+                                <label className="field">
+                                    <span className="lbl">Email</span>
+                                    <input type="email" value={newUser.email} placeholder="contact@parcbogdan.ro"
+                                        autoCapitalize="off" autoCorrect="off" spellCheck={false}
                                         onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
-                                    <button type="button" onClick={handleCreateUser} disabled={creatingUser}>
-                                        {creatingUser ? '...' : 'Creează'}
-                                    </button>
+                                    <span className="hint">Cu el se va autentifica în panou.</span>
+                                </label>
+
+                                <div className="row">
+                                    <label className="field">
+                                        <span className="lbl">Telefon (opțional)</span>
+                                        <input type="tel" value={newUser.phone} placeholder="0761930497"
+                                            onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} />
+                                    </label>
+                                    <label className="field">
+                                        <span className="lbl">Parolă (opțional)</span>
+                                        <input type="text" value={newUser.password} placeholder="se generează automat"
+                                            autoCapitalize="off" autoCorrect="off" spellCheck={false}
+                                            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
+                                    </label>
                                 </div>
+                                <span className="hint">
+                                    Lasă parola goală și se generează una ușor de dictat la telefon.
+                                </span>
+
+                                <button type="button" className="confirm-btn" style={{ width: '100%', marginTop: 10 }}
+                                    onClick={handleCreateUser} disabled={creatingUser}>
+                                    {creatingUser ? 'Se creează...' : 'Creează contul'}
+                                </button>
                             </div>
                         </>
                     )}
