@@ -527,3 +527,275 @@ body {
     opacity: 0.5;
     cursor: default;
 }
+
+/* ==========================================================================
+   PARCURI AUTO — de adăugat la FINALUL fișierului App.css existent
+   --------------------------------------------------------------------------
+   Refolosește variabilele vizuale ale panoului: fundal #0a0a0a, carduri
+   #141414, borduri #222/#333, inputuri #1a1a1a, accent #081539, distructiv
+   #800000. Nu se introduce niciun sistem de stilizare nou.
+   ========================================================================== */
+
+/* Container lărgit doar pe tab-ul Parcuri (vezi comentariul din Dashboard.jsx) */
+.dashboard-container.wide { max-width: 860px; }
+.tabs { flex-wrap: wrap; }
+.tabs .tab { min-width: 100px; }
+
+/* ---------- Elemente comune ---------- */
+.ghost-btn {
+    padding: 9px 14px; border-radius: 9px; border: 1px solid #333;
+    background: transparent; color: #ccc; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: border-color .15s, color .15s;
+}
+.ghost-btn:hover { border-color: #555; color: #fff; }
+.ghost-btn.danger { color: #ff6b6b; border-color: #4a2020; }
+.ghost-btn.file { display: inline-block; text-align: center; }
+.ghost-btn:disabled { opacity: .5; cursor: default; }
+
+.hint { display: block; color: #777; font-size: 11.5px; line-height: 1.5; margin-top: 4px; }
+.lbl {
+    display: flex; align-items: center; justify-content: space-between;
+    color: #999; font-size: 12.5px; font-weight: 600; margin-bottom: 6px;
+}
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; min-width: 0; }
+
+.char-counter { font-size: 11px; color: #666; font-weight: 400; }
+.char-counter.near { color: #d9a441; }
+.char-counter.over { color: #ff4444; font-weight: 700; }
+
+.pill {
+    display: inline-block; padding: 3px 9px; border-radius: 20px;
+    border: 1px solid #333; background: #111; color: #999;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+}
+.pill.ok   { color: #44bb44; border-color: #1e3a1e; }
+.pill.bad  { color: #ff5555; border-color: #4a1f1f; }
+.pill.warn { color: #d9a441; border-color: #4a3a1f; }
+.pill.off  { color: #666; }
+.pill.clickable { cursor: pointer; }
+
+/* ---------- Formular ---------- */
+.parc-form-head, .parcuri-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; gap: 10px;
+}
+.parc-form-head h3, .parcuri-header h3 { font-size: 17px; }
+
+.form-section { border: 1px solid #222; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+.form-section.open { border-color: #2e2e2e; }
+.form-section-head {
+    width: 100%; display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+    background: #141414; border: none; color: #fff; cursor: pointer; text-align: left;
+}
+.sec-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; flex-shrink: 0; }
+.sec-dot.ok { background: #44bb44; }
+.sec-title { font-size: 14.5px; font-weight: 600; }
+.sec-sub { color: #666; font-size: 11.5px; flex: 1; }
+.chev { color: #666; font-size: 10px; }
+.form-section-body { padding: 16px; border-top: 1px solid #1e1e1e; }
+
+.field { display: block; margin-bottom: 14px; }
+.field input, .field textarea,
+.parc-form input[type="text"], .parc-form input[type="time"], .parc-form textarea {
+    width: 100%; padding: 11px 12px; border-radius: 9px; border: 1px solid #333;
+    background: #1a1a1a; color: #fff; font-size: 14px; outline: none;
+    font-family: inherit; resize: vertical;
+}
+.field input:focus, .field textarea:focus { border-color: #555; }
+
+.sub-status { font-size: 12.5px; margin: -8px 0 12px; color: #888; }
+.sub-status.ok  { color: #44bb44; }
+.sub-status.bad { color: #ff4444; }
+
+/* ---------- Selectorul de utilizator ---------- */
+.user-block { margin-bottom: 14px; }
+.user-block > input { width: 100%; padding: 11px 12px; border-radius: 9px;
+    border: 1px solid #333; background: #1a1a1a; color: #fff; font-size: 14px; outline: none; }
+.user-sel {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px;
+}
+.user-sel div { display: flex; flex-direction: column; }
+.user-sel span { color: #777; font-size: 12px; }
+.user-opt {
+    width: 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 12px; margin-top: 6px; border-radius: 9px;
+    border: 1px solid #262626; background: #121212; color: #ddd;
+    font-size: 13px; cursor: pointer; text-align: left;
+}
+.user-opt:hover { border-color: #444; }
+.user-opt.taken { opacity: .45; cursor: not-allowed; }
+.user-opt span { color: #777; font-size: 12px; }
+.tagpill {
+    padding: 2px 8px; border-radius: 12px; background: #1c1c1c;
+    border: 1px solid #2c2c2c; font-size: 10.5px; color: #888 !important;
+}
+.tagpill.bad { color: #ff6b6b !important; border-color: #3d1c1c; }
+.new-user { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #262626; }
+.new-user .row { margin-top: 8px; }
+.new-user input { padding: 10px; border-radius: 9px; border: 1px solid #333;
+    background: #1a1a1a; color: #fff; font-size: 13px; outline: none; }
+.new-user button { padding: 10px 14px; border-radius: 9px; border: none;
+    background: #081539; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* ---------- Upload branding ---------- */
+.upload-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.upload-box { flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 8px; }
+.upload-box.wide { flex: 2.4; min-width: 240px; }
+.upload-empty {
+    height: 80px; border: 1px dashed #333; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #555; font-size: 12px;
+}
+.logo-prev { width: 80px; height: 80px; border-radius: 18px; object-fit: contain;
+    background: #fff; border: 1px solid #2a2a2a; }
+.banner-prev { width: 100%; aspect-ratio: 3/1; object-fit: cover;
+    border-radius: 10px; border: 1px solid #2a2a2a; }
+
+/* ---------- Presetări ---------- */
+.preset-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px; margin-bottom: 10px;
+}
+.preset-opt {
+    padding: 14px 12px; border-radius: 12px; border: 2px solid transparent;
+    cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 4px;
+}
+.preset-opt.sel { border-color: #7aa2f7; }
+.preset-opt strong { font-size: 14px; }
+.preset-opt span { font-size: 11px; opacity: .75; }
+.preset-dots { display: flex; gap: 4px; margin-top: 6px; }
+.preset-dots i { width: 12px; height: 12px; border-radius: 3px; display: block; }
+
+.accent-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.accent-opt {
+    width: 34px; height: 34px; border-radius: 9px; border: 2px solid transparent;
+    cursor: pointer; outline-offset: 2px;
+}
+.accent-opt.sel { border-color: #fff; }
+
+/* ---------- Cropper ---------- */
+.cropper {
+    background: #141414; border: 1px solid #2a2a2a; border-radius: 16px;
+    padding: 18px; width: 100%; max-width: 560px;
+}
+.cropper-head { display: flex; justify-content: space-between; align-items: baseline;
+    gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.cropper-hint { color: #777; font-size: 11.5px; }
+.cropper-error { color: #ff5555; font-size: 12.5px; margin-bottom: 10px; }
+.cropper-frame {
+    position: relative; width: 100%; overflow: hidden; border-radius: 10px;
+    background: #0a0a0a; border: 1px solid #2a2a2a; cursor: grab;
+    touch-action: none; user-select: none;
+}
+.cropper-frame:active { cursor: grabbing; }
+.cropper-frame img { position: absolute; top: 0; left: 0; max-width: none; display: block; }
+/* Reproduce overlay-ul întunecat aplicat automat pe site, ca să vezi din
+   cropper dacă titlul va fi lizibil peste imaginea aleasă. */
+.cropper-scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(90deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.28) 55%, rgba(0,0,0,0) 100%);
+}
+.cropper-zoom { display: flex; align-items: center; gap: 10px; margin: 14px 0 8px;
+    color: #999; font-size: 12.5px; }
+.cropper-zoom input { flex: 1; accent-color: #7aa2f7; }
+.cropper-zoom-val { width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+.cropper-meta { color: #666; font-size: 11.5px; margin-bottom: 14px; }
+
+/* ---------- Servicii ---------- */
+.services-off {
+    padding: 18px; border: 1px dashed #2c2c2c; border-radius: 12px;
+    text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+.services-off p { color: #888; font-size: 13px; }
+.service-card { border: 1px solid #262626; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.service-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.service-num {
+    width: 24px; height: 24px; border-radius: 50%; background: #1c1c1c;
+    color: #888; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.service-card label { display: block; margin-bottom: 10px; }
+.service-card input, .service-card textarea {
+    width: 100%; padding: 10px 11px; border-radius: 9px; border: 1px solid #333;
+    background: #1a1a1a; color: #fff; font-size: 13.5px; outline: none;
+    font-family: inherit; resize: vertical;
+}
+.service-preview {
+    display: flex; gap: 12px; padding: 12px; border-radius: 10px;
+    background: #0f0f0f; border: 1px solid #1e1e1e; margin-top: 4px;
+}
+.service-preview-icon { color: var(--accent, #800000); flex-shrink: 0; }
+.service-preview strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
+.service-preview p { color: #888; font-size: 12px; line-height: 1.5; }
+
+.icon-picker { position: relative; flex: 1; }
+.icon-picker-btn {
+    width: 100%; display: flex; align-items: center; gap: 9px; padding: 9px 11px;
+    border-radius: 9px; border: 1px solid #333; background: #1a1a1a;
+    color: #ddd; font-size: 13px; cursor: pointer;
+}
+.icon-picker-btn .chev { margin-left: auto; }
+.icon-picker-grid {
+    position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; right: 0;
+    max-height: 260px; overflow-y: auto; padding: 6px;
+    background: #161616; border: 1px solid #333; border-radius: 10px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.6);
+}
+.icon-opt {
+    display: flex; align-items: center; gap: 8px; padding: 8px 9px;
+    border-radius: 8px; border: 1px solid transparent; background: transparent;
+    color: #bbb; font-size: 11.5px; cursor: pointer; text-align: left;
+}
+.icon-opt:hover { background: #1e1e1e; }
+.icon-opt.sel { border-color: #7aa2f7; color: #fff; }
+
+/* ---------- Program ---------- */
+.schedule-editor { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.schedule-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.schedule-row.is-closed { opacity: .5; }
+.schedule-day { width: 78px; color: #999; font-size: 12.5px; flex-shrink: 0; }
+.schedule-row input[type="time"] { width: 104px; padding: 7px 9px; }
+.schedule-dash { color: #555; }
+.schedule-closed { display: flex; align-items: center; gap: 5px; color: #888; font-size: 12px; }
+.schedule-closed input { accent-color: #800000; }
+
+/* ---------- Carduri de parc ---------- */
+.parc-card { background: #141414; border: 1px solid #222; border-radius: 14px;
+    padding: 14px; margin-bottom: 12px; }
+.parc-card.inactive { opacity: .58; }
+.parc-card-top { display: flex; gap: 12px; align-items: flex-start; }
+.parc-logo { width: 46px; height: 46px; border-radius: 12px; object-fit: contain;
+    background: #fff; flex-shrink: 0; }
+.parc-id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.parc-id strong { font-size: 14.5px; }
+.parc-id a { color: #7aa2f7; font-size: 12px; text-decoration: none; }
+.parc-user { color: #666; font-size: 11.5px; }
+.parc-badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0 0; }
+.parc-reasons { margin: 10px 0 0; padding: 10px 12px 10px 26px;
+    background: #17140f; border: 1px solid #2e2718; border-radius: 9px; }
+.parc-reasons li { color: #c9a961; font-size: 12px; line-height: 1.6; }
+.parc-warn { margin-top: 10px; padding: 9px 11px; border-radius: 9px;
+    background: #1a1010; border: 1px solid #3a1e1e; color: #e0a0a0;
+    font-size: 12px; line-height: 1.5; }
+.parc-actions { display: flex; gap: 8px; margin-top: 12px; }
+.parc-actions .ghost-btn { flex: 1; }
+
+.parc-form-actions { display: flex; gap: 10px; margin-top: 18px; }
+.parc-form-actions .confirm-btn { flex: 2; }
+.parc-form-actions .cancel-btn { flex: 1; }
+
+.link-danger {
+    display: block; width: 100%; margin-top: 14px; padding: 8px;
+    background: none; border: none; color: #ff6b6b; font-size: 12px;
+    text-decoration: underline; cursor: pointer;
+}
+.danger-title { color: #ff5555; font-weight: 700; font-size: 16px; margin-bottom: 10px; }
+.popup input {
+    width: 100%; padding: 11px; margin-bottom: 14px; border-radius: 9px;
+    border: 1px solid #333; background: #1a1a1a; color: #fff;
+    font-size: 14px; outline: none;
+}
+.popup code { background: #1c1c1c; padding: 2px 6px; border-radius: 4px; color: #7aa2f7; }
