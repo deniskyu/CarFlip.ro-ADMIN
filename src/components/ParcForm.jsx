@@ -6,6 +6,7 @@ import { compressImage, parseMapsUrl, formatBytes } from '../lib/imageTools';
 import ImageCropper from './ImageCropper';
 import ServicesEditor from './ServicesEditor';
 import ScheduleEditor from './ScheduleEditor';
+import AccentPicker from './AccentPicker';
 
 // ============================================================================
 //  src/components/ParcForm.jsx
@@ -35,6 +36,19 @@ const DEFAULT_FORM = {
     seo_keywords: [], seo_service_area: [], founded_year: '', meta_description: '',
     notes: '',
 };
+
+/**
+ * Text pe rânduri → array curat.
+ * Se apelează la FIECARE tastă, dar NU modifică textul afișat — acela stă în
+ * starea `raw`. Așa rândurile goale supraviețuiesc cât timp scrii, iar la
+ * salvare ajunge doar ce e util.
+ */
+const splitLines = (text, max) =>
+    String(text || '')
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .slice(0, max);
 
 const LIMITS = {
     display_name: 40, hero_title: 60, hero_subtitle: 140,
@@ -84,6 +98,14 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
     const [bannerPrev, setBannerPrev] = useState(null);
     const [cropSrc, setCropSrc] = useState(null);
 
+    // ── Text BRUT pentru câmpurile scrise pe rânduri ────────────────────────
+    // Fără asta, `.filter(Boolean)` din onChange șterge rândul gol creat de
+    // Enter, iar `value={array.join('\n')}` îl scrie înapoi fără el — deci
+    // tasta Enter nu are niciun efect vizibil. Textarea afișează acum exact ce
+    // ai tastat; array-ul se derivă din el.
+    const [kwRaw, setKwRaw] = useState('');
+    const [areaRaw, setAreaRaw] = useState('');
+
     // Subdomeniu
     const [subState, setSubState] = useState({ checking: false, ok: null, msg: '' });
     const subTimer = useRef(null);
@@ -108,6 +130,8 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
             lat: parc.lat ?? '', lng: parc.lng ?? '',
             founded_year: parc.founded_year ?? '',
         });
+        setKwRaw((parc.seo_keywords || []).join('\n'));
+        setAreaRaw((parc.seo_service_area || []).join('\n'));
         setLogoPrev(parc.logo_url || null);
         setBannerPrev(parc.banner_url || null);
         if (parc.user) setSelUser({ _id: parc.user_id, username: parc.user.username, email: parc.user.email });
@@ -404,19 +428,11 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
                 <p className="hint">{preset.detail}</p>
 
                 <span className="lbl">Culoare de accent</span>
-                <div className="accent-row">
-                    {preset.accents.map((c) => (
-                        <button
-                            type="button" key={c}
-                            className={`accent-opt ${f.accent_color === c ? 'sel' : ''}`}
-                            style={{ background: c }} title={c}
-                            onClick={() => set('accent_color', c)}
-                        />
-                    ))}
-                </div>
-                <span className="hint">
-                    Culorile sunt pre-validate pentru contrast în această presetare.
-                </span>
+                <AccentPicker
+                    preset={preset}
+                    value={f.accent_color}
+                    onChange={(c) => set('accent_color', c)}
+                />
             </Section>
 
             {/* ── TEXTE ──────────────────────────────────────────────────── */}
@@ -524,18 +540,27 @@ export default function ParcForm({ parc, onSaved, onCancel }) {
                     alimentează textele generate: subtitluri, „Despre noi”, intro-urile
                     paginilor de marcă și descrierile meta.
                 </p>
-                <Field label="Cuvinte cheie (max 8, câte unul pe linie)">
-                    <textarea rows={4} value={f.seo_keywords.join('\n')}
+                <Field label={`Cuvinte cheie (${f.seo_keywords.length}/8, câte unul pe linie)`}>
+                    <textarea rows={5} value={kwRaw}
                         placeholder={'mașini second hand Craiova\nauto rulate Dolj\nrate fără avans'}
-                        onChange={(e) => set('seo_keywords',
-                            e.target.value.split('\n').map((s) => s.trim()).filter(Boolean).slice(0, 8))} />
+                        onChange={(e) => {
+                            setKwRaw(e.target.value);
+                            set('seo_keywords', splitLines(e.target.value, 8));
+                        }}
+                        onBlur={() => setKwRaw(f.seo_keywords.join('\n'))} />
+                    <span className="hint">
+                        Apasă Enter pentru fiecare frază nouă. Rândurile goale se ignoră la salvare.
+                    </span>
                 </Field>
-                <Field label="Localități deservite (max 10)"
+                <Field label={`Localități deservite (${f.seo_service_area.length}/10)`}
                     hint="Prind căutări din localitățile din jur, unde competiția e aproape zero.">
-                    <textarea rows={3} value={f.seo_service_area.join('\n')}
+                    <textarea rows={4} value={areaRaw}
                         placeholder={'Craiova\nFiliași\nSegarcea'}
-                        onChange={(e) => set('seo_service_area',
-                            e.target.value.split('\n').map((s) => s.trim()).filter(Boolean).slice(0, 10))} />
+                        onChange={(e) => {
+                            setAreaRaw(e.target.value);
+                            set('seo_service_area', splitLines(e.target.value, 10));
+                        }}
+                        onBlur={() => setAreaRaw(f.seo_service_area.join('\n'))} />
                 </Field>
                 <div className="row">
                     <Field label="Anul înființării"><input value={f.founded_year} placeholder="2009"

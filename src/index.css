@@ -942,3 +942,112 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .stat-card, .refresh-btn.is-loading { transition: none; animation: none; }
 }
+
+/* ==========================================================================
+   ACCENT PICKER — de adăugat la FINALUL fișierului src/index.css
+   ========================================================================== */
+
+.accent-picker { margin-bottom: 8px; }
+
+.accent-modes {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.accent-mode {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #999;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, color .15s, background .15s;
+}
+.accent-mode:hover { border-color: #555; color: #ccc; }
+.accent-mode.sel {
+    border-color: #7aa2f7;
+    color: #fff;
+    background: #141a2a;
+}
+
+/* ---------- Culoare proprie ---------- */
+.accent-custom {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+/* Inputul nativ de culoare: eliminăm chenarul implicit al browserului,
+   altfel arată ca un buton de sistem lipit peste tema întunecată. */
+.accent-native {
+    width: 56px;
+    height: 46px;
+    padding: 0;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #1a1a1a;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.accent-native::-webkit-color-swatch-wrapper { padding: 4px; }
+.accent-native::-webkit-color-swatch { border: none; border-radius: 6px; }
+.accent-native::-moz-color-swatch { border: none; border-radius: 6px; }
+
+.accent-hex {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #fff;
+    /* 16px previne zoom-ul automat al Safari pe iOS la focus */
+    font-size: 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-transform: lowercase;
+    outline: none;
+}
+.accent-hex:focus { border-color: #7aa2f7; }
+
+/* ---------- Previzualizare și verdict ---------- */
+.accent-check {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px;
+    border-radius: 10px;
+    background: #101010;
+    border: 1px solid #1e1e1e;
+}
+.accent-preview {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    border-radius: 9px;
+    font-size: 13.5px;
+    font-weight: 700;
+}
+.accent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    line-height: 1.55;
+    min-width: 0;
+}
+.accent-ok { color: #44bb44; font-weight: 600; }
+.accent-warn { color: #d9a441; font-weight: 600; }
+.accent-info code {
+    background: #1c1c1c;
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: #ddd;
+    font-size: 11.5px;
+}
+
+@media (max-width: 420px) {
+    .accent-check { flex-direction: column; }
+    .accent-preview { align-self: flex-start; }
+}
